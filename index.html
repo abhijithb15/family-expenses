@@ -175,17 +175,23 @@ function renderMonth() {
   sav.classList.toggle("neg", num(r[4]) < 0);
 }
 function renderCat() {
-  const rows = (state.cat || []).filter(r => r[0]);
-  const used = rows.map((r, i) => ({name: r[0], v: num(r[1]), color: GREENS[i % GREENS.length]}));
-  const nz = used.filter(x => x.v > 0);
+  const STRONG = ["#1B4332","#1F4E79","#B5651D","#6A1B9A","#00796B","#8D6E00"];
+  const nz = (state.cat || []).filter(r => r[0] && num(r[1]) > 0).map(r => ({name: r[0], v: num(r[1])})).sort((a, b) => b.v - a.v);
+  let ci = 0;
+  const pick = n => n === "Eating out" ? "#C0392B" : STRONG[(ci++) % STRONG.length];
+  const top = nz.slice(0, nz.length > 6 ? 5 : 6).map(x => Object.assign(x, {color: pick(x.name)}));
+  const rest = nz.slice(top.length);
+  const othersColor = "#5F6B66";
+  rest.forEach(x => x.color = othersColor);
+  const slices = rest.length ? top.concat([{name: "Others", v: rest.reduce((a, b) => a + b.v, 0), color: othersColor}]) : top;
   const ul = $("catList");
   if (!nz.length) ul.innerHTML = `<li class="muted">No expenses this month yet.</li>`;
   else {
     const total = nz.reduce((a, b) => a + b.v, 0);
-    ul.innerHTML = nz.slice().sort((a, b) => b.v - a.v).map(x =>
+    ul.innerHTML = nz.map(x =>
       `<li><span><span class="dot" style="background:${x.color}"></span>${esc(x.name)}</span><span class="amt">${inr(x.v)} <span class="muted">${(x.v / total * 100).toFixed(1)}%</span></span></li>`).join("");
   }
-  const data = {labels: used.map(x => x.name), datasets: [{data: used.map(x => x.v), backgroundColor: used.map(x => x.color), borderWidth: 2, borderColor: "#fff"}]};
+  const data = {labels: slices.map(x => x.name), datasets: [{data: slices.map(x => x.v), backgroundColor: slices.map(x => x.color), borderWidth: 2, borderColor: "#fff"}]};
   drawChart("c_cat", {type: "doughnut", data, options: {cutout: "62%", plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => " " + c.label + ": " + inr(c.parsed)}}}}});
 }
 function renderFood() {
@@ -194,7 +200,7 @@ function renderFood() {
   const cats = head.slice(1, 6);
   const rows = f.slice(1, 5);
   const labels = rows.map(r => r[0] || "");
-  const cols = ["#1B4332","#2D6A4F","#40916C","#74C69D","#B7E4C7"];
+  const cols = ["#1B4332","#2D6A4F","#40916C","#1F4E79","#C0392B"];
   const datasets = cats.map((c, i) => ({label: c, data: rows.map(r => num(r[i + 1])), backgroundColor: cols[i], borderRadius: 4, stack: "s"}));
   drawChart("c_food", {type: "bar", data: {labels, datasets}, options: {plugins: {legend: {position: "bottom", labels: {boxWidth: 10, font: {size: 11}}}, tooltip: {callbacks: {label: c => " " + c.dataset.label + ": " + inr(c.parsed.y), footer: items => "Total: " + inr(items.reduce((a, b) => a + b.parsed.y, 0))}}}, scales: {x: {stacked: true, grid: {display: false}, ticks: {font: {size: 11}}}, y: {stacked: true, ticks: {callback: v => inr(v), font: {size: 11}}}}}});
 }
