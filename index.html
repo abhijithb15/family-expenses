@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B4332">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Family Expenses</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --dg:#1B4332; --mg:#2D6A4F; --g3:#40916C; --g4:#74C69D; --g5:#B7E4C7; --lb:#E9F5EE;
+    --bg:#F4F8F5; --card:#FFFFFF; --ink:#16241C; --muted:#5F7A6B; --line:#DCE8E0; --red:#C0392B;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  header{background:var(--dg);color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 18px 16px;position:sticky;top:0;z-index:5}
+  header .row{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:760px;margin:0 auto}
+  header h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.1px}
+  header .sub{font-size:12px;color:#CDE8D6;margin-top:3px}
+  .btn{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:999px;padding:8px 14px;font:600 13px Inter,sans-serif;cursor:pointer}
+  .btn:active{background:rgba(255,255,255,.26)}
+  .btn.solid{background:var(--dg);color:#fff}
+  main{max-width:760px;margin:0 auto;padding:14px 14px calc(env(safe-area-inset-bottom) + 28px)}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .tile{background:var(--card);border-radius:14px;padding:13px 14px;border:1px solid var(--line)}
+  .tile .k{font-size:12px;color:var(--muted);font-weight:500}
+  .tile .v{font-size:21px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tile.hero{grid-column:1/-1;background:var(--dg);border-color:var(--dg);color:#fff}
+  .tile.hero .k{color:#CDE8D6}
+  .tile.hero .v{font-size:30px}
+  .tile.hero .split{display:flex;gap:18px;margin-top:10px;font-size:13px;color:#CDE8D6}
+  .tile.hero .split b{display:block;color:#fff;font-size:16px;margin-top:2px;font-variant-numeric:tabular-nums}
+  .neg{color:var(--red)!important}
+  .tile.eat{background:#C0392B;border-color:#C0392B;color:#fff}
+  .tile.eat .k{color:#F8D7D3}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px}
+  section.card h2{font-size:15px;margin:0 0 10px;color:var(--dg);font-weight:700}
+  .chartbox{position:relative;height:240px}
+  .chartbox.tall{height:270px}
+  .list{list-style:none;margin:8px 0 0;padding:0}
+  .list li{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-top:1px solid var(--line);font-size:14px;gap:10px}
+  .list li:first-child{border-top:0}
+  .list .amt{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;flex:none}
+  .muted{color:var(--muted);font-size:12px}
+  .tx .l{min-width:0}
+  .tx .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tx .m{font-size:12px;color:var(--muted);margin-top:2px}
+  .tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:600 12px Inter,sans-serif;color:var(--muted);cursor:pointer}
+  .tab.on{background:var(--dg);color:#fff;border-color:var(--dg)}
+  .note{background:#FFF8E6;border:1px solid #F1DFA8;color:#5C4A12;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:12px}
+  .note.err{background:#FDECEA;border-color:#F3C1BB;color:#7A1F16}
+  .note button{margin-top:10px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mini{background:var(--lb);border-radius:10px;padding:10px 12px}
+  .mini .k{font-size:12px;color:var(--muted)}
+  .mini .v{font-size:17px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  th{text-align:left;color:var(--muted);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--line)}
+  td{padding:8px 4px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  td.r,th.r{text-align:right}
+  .skeleton{color:var(--muted);font-size:13px;padding:6px 0}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
+  @media (min-width:640px){ .tiles{grid-template-columns:repeat(4,1fr)} .tile.hero{grid-column:span 4} }
+</style>
+</head>
+<body>
+<header>
+  <div class="row">
+    <div>
+      <h1>Family Expenses</h1>
+      <div class="sub" id="updated">Loading…</div>
+    </div>
+    <button class="btn" id="refresh" type="button">Refresh</button>
+  </div>
+</header>
+
+<main>
+  <div id="banner"></div>
+
+  <div class="tiles">
+    <div class="tile hero">
+      <div class="k" id="monthLabel">This month</div>
+      <div class="v" id="t_mexp">—</div>
+      <div class="split">
+        <div>Income<b id="t_minc">—</b></div>
+        <div>Savings<b id="t_msav">—</b></div>
+      </div>
+    </div>
+    <div class="tile"><div class="k">Total expense</div><div class="v" id="t_total">—</div></div>
+    <div class="tile eat"><div class="k">Eating out (month)</div><div class="v" id="t_eat">—</div></div>
+    <div class="tile"><div class="k">Fuel (month)</div><div class="v" id="t_fuel">—</div></div>
+    <div class="tile"><div class="k" id="t_cpk_k">Cost per km</div><div class="v" id="t_cpk">—</div></div>
+  </div>
+
+  <section class="card">
+    <h2>This month by category</h2>
+    <div class="chartbox"><canvas id="c_cat"></canvas></div>
+    <ul class="list" id="catList"><li class="skeleton">Loading…</li></ul>
+  </section>
+
+  <section class="card">
+    <h2>Food spending, last 4 weeks</h2>
+    <div class="chartbox tall"><canvas id="c_food"></canvas></div>
+  </section>
+
+  <section class="card">
+    <h2>Car distance</h2>
+    <div class="grid2">
+      <div class="mini"><div class="k">Odometer now</div><div class="v" id="d_odo">—</div></div>
+      <div class="mini"><div class="k">Km driven (logged)</div><div class="v" id="f_km">—</div></div>
+      <div class="mini"><div class="k">Average per day</div><div class="v" id="d_avg">—</div></div>
+      <div class="mini"><div class="k">Last reading</div><div class="v" id="d_last">—</div></div>
+    </div>
+    <div class="chartbox" style="margin-top:12px"><canvas id="c_dist"></canvas></div>
+    <div class="muted" id="kmNote"></div>
+  </section>
+
+  <section class="card">
+    <h2>Fuel</h2>
+    <div class="grid2">
+      <div class="mini"><div class="k">Fuel this month</div><div class="v" id="f_month">—</div></div>
+      <div class="mini"><div class="k">Cost per km</div><div class="v" id="f_cpk">—</div></div>
+    </div>
+    <div class="chartbox" style="margin-top:12px"><canvas id="c_fuel"></canvas></div>
+    <div class="chartbox" style="margin-top:12px"><canvas id="c_km"></canvas></div>
+  </section>
+
+  <footer>Read-only view of the Family Expense Tracker sheet. Add entries through Claude.</footer>
+</main>
+
+<script>
+const GREENS = ["#1B4332","#2D6A4F","#40916C","#52B788","#74C69D","#95D5B2","#B7E4C7","#0B6E4F","#3A5A40","#588157","#A3B18A","#6A994E","#386641","#81B29A","#2A9D8F","#264653","#8AB17D","#4F772D","#90A955","#31572C","#132A13","#ECF39E","#5E8C61","#A7C957"];
+
+
+const state = {};
+const charts = {};
+
+const $ = id => document.getElementById(id);
+const num = s => { if (s === undefined || s === null || s === "" || s === "-") return 0; const n = parseFloat(String(s).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; };
+const inr = n => { const neg = n < 0; n = Math.round(Math.abs(n)); const s = n.toString(); let out; if (s.length <= 3) out = s; else { const last3 = s.slice(-3); let rest = s.slice(0, -3); rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ","); out = rest + "," + last3; } return (neg ? "-₹" : "₹") + out; };
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const MON = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const parseDate = s => { const m = /^(\d{1,2}) (\w{3}) (\d{4})$/.exec(String(s||"").trim()); return m ? new Date(+m[3], MON[m[2]], +m[1]).getTime() : 0; };
+
+/* ---------- banner ---------- */
+function banner(html, kind) { $("banner").innerHTML = html ? `<div class="note ${kind||""}">${html}</div>` : ""; }
+
+/* ---------- render ---------- */
+function renderTiles() {
+  const t = state.tiles; if (!t) return;
+  const v = t[1] || [];
+  $("t_total").textContent = v[0] || "—";
+  $("t_fuel").textContent = v[4] || "—";
+  $("t_cpk").textContent = (v[6] && v[6] !== "-") ? v[6] : "—";
+  $("t_cpk_k").textContent = (t[0] && t[0][6]) || "Cost per km";
+  $("t_eat").textContent = v[8] || "—";
+  $("f_month").textContent = v[4] || "—";
+  $("monthLabel").textContent = ((t[0] && t[0][2]) || "Income").replace(/^Income/, "Expense");
+}
+function renderMonth() {
+  const m = state.month; if (!m) return;
+  const r = m[0] || [];
+  $("t_minc").textContent = r[0] || "—";
+  $("t_mexp").textContent = r[2] || "—";
+  const sav = $("t_msav"); sav.textContent = r[4] || "—";
+  sav.classList.toggle("neg", num(r[4]) < 0);
+}
+function renderCat() {
+  const rows = (state.cat || []).filter(r => r[0]);
+  const used = rows.map((r, i) => ({name: r[0], v: num(r[1]), color: GREENS[i % GREENS.length]}));
+  const nz = used.filter(x => x.v > 0);
+  const ul = $("catList");
+  if (!nz.length) ul.innerHTML = `<li class="muted">No expenses this month yet.</li>`;
+  else {
+    const total = nz.reduce((a, b) => a + b.v, 0);
+    ul.innerHTML = nz.slice().sort((a, b) => b.v - a.v).map(x =>
+      `<li><span><span class="dot" style="background:${x.color}"></span>${esc(x.name)}</span><span class="amt">${inr(x.v)} <span class="muted">${(x.v / total * 100).toFixed(1)}%</span></span></li>`).join("");
+  }
+  const data = {labels: used.map(x => x.name), datasets: [{data: used.map(x => x.v), backgroundColor: used.map(x => x.color), borderWidth: 2, borderColor: "#fff"}]};
+  drawChart("c_cat", {type: "doughnut", data, options: {cutout: "62%", plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => " " + c.label + ": " + inr(c.parsed)}}}}});
+}
+function renderFood() {
+  const f = state.food; if (!f || !f.length) return;
+  const head = f[0] || [];
+  const cats = head.slice(1, 6);
+  const rows = f.slice(1, 5);
+  const labels = rows.map(r => r[0] || "");
+  const cols = ["#1B4332","#2D6A4F","#40916C","#74C69D","#B7E4C7"];
+  const datasets = cats.map((c, i) => ({label: c, data: rows.map(r => num(r[i + 1])), backgroundColor: cols[i], borderRadius: 4, stack: "s"}));
+  drawChart("c_food", {type: "bar", data: {labels, datasets}, options: {plugins: {legend: {position: "bottom", labels: {boxWidth: 10, font: {size: 11}}}, tooltip: {callbacks: {label: c => " " + c.dataset.label + ": " + inr(c.parsed.y), footer: items => "Total: " + inr(items.reduce((a, b) => a + b.parsed.y, 0))}}}, scales: {x: {stacked: true, grid: {display: false}, ticks: {font: {size: 11}}}, y: {stacked: true, ticks: {callback: v => inr(v), font: {size: 11}}}}}});
+}
+function renderFuel() {
+  const p = state.fuelP || [];
+  const tot = p[0] || [];
+  $("f_km").textContent = tot[3] || "0 km";
+  $("f_cpk").textContent = tot[5] || "—";
+  const periods = p.slice(1).filter(r => r[0] && r[1]).slice(0, 8).reverse();
+  const short = s => String(s).replace(/ \d{4}$/, "");
+  const labels = periods.map(r => short(r[0]) + " – " + short(r[1]));
+  $("kmNote").textContent = periods.length ? "Each bar is the distance between two odometer readings." : "Send two odometer readings to Claude (for example \"car 45230 km\") to start km tracking.";
+  drawChart("c_dist", {type: "bar", data: {labels, datasets: [{label: "Km driven", data: periods.map(r => num(r[3])), backgroundColor: "#40916C", borderRadius: 4}]}, options: {plugins: {legend: {display: false}, title: {display: true, text: "Km driven per period", color: "#1B4332", font: {weight: 600}}, tooltip: {callbacks: {label: c => " " + c.parsed.y.toLocaleString("en-IN") + " km", afterLabel: c => { const r = periods[c.dataIndex]; return r ? (r[2] + " days · " + r[4]) : ""; }}}}, scales: {x: {grid: {display: false}, ticks: {font: {size: 10}}}, y: {ticks: {callback: v => v.toLocaleString("en-IN") + " km", font: {size: 11}}}}}});
+  drawChart("c_km", {type: "line", data: {labels, datasets: [{label: "Cost per km", data: periods.map(r => num(r[5])), borderColor: "#1B4332", backgroundColor: "#1B4332", tension: .3, pointRadius: 4}]}, options: {plugins: {legend: {display: false}, title: {display: true, text: "Cost per km by period", color: "#1B4332", font: {weight: 600}}, tooltip: {callbacks: {label: c => " ₹" + c.parsed.y.toFixed(2) + " per km"}}}, scales: {x: {grid: {display: false}, ticks: {font: {size: 10}}}, y: {beginAtZero: true, ticks: {callback: v => "₹" + v, font: {size: 11}}}}}});
+  const m = (state.fuelM || []).slice(1).filter(r => r[0]).slice(0, 6).reverse();
+  drawChart("c_fuel", {type: "bar", data: {labels: m.map(r => r[0]), datasets: [{label: "Fuel", data: m.map(r => num(r[1])), backgroundColor: "#2D6A4F", borderRadius: 4}]}, options: {plugins: {legend: {display: false}, title: {display: true, text: "Fuel spend by month", color: "#1B4332", font: {weight: 600}}, tooltip: {callbacks: {label: c => " " + inr(c.parsed.y)}}}, scales: {x: {grid: {display: false}}, y: {ticks: {callback: v => inr(v), font: {size: 11}}}}}});
+}
+function renderOdo() {
+  const rows = (state.odo || []).filter(r => r && r[0] && r[1]).map(r => ({d: parseDate(r[0]), label: r[0], km: num(r[1])})).filter(x => x.d && x.km).sort((a, b) => a.d - b.d);
+  if (!rows.length) { $("d_odo").textContent = "—"; $("d_last").textContent = "—"; $("d_avg").textContent = "—"; }
+  else {
+    const last = rows[rows.length - 1], first = rows[0];
+    $("d_odo").textContent = last.km.toLocaleString("en-IN") + " km";
+    $("d_last").textContent = String(last.label).replace(/ \d{4}$/, "");
+    const days = (last.d - first.d) / 86400000;
+    $("d_avg").textContent = rows.length > 1 && days > 0 ? Math.round((last.km - first.km) / days).toLocaleString("en-IN") + " km" : "—";
+  }
+}
+const RENDER = {tiles: renderTiles, month: renderMonth, cat: renderCat, food: renderFood, fuelP: renderFuel, fuelM: renderFuel, odo: renderOdo};
+
+function drawChart(id, cfg) {
+  if (!window.Chart) return;
+  cfg.options = Object.assign({responsive: true, maintainAspectRatio: false, animation: {duration: 300}}, cfg.options || {});
+  if (charts[id]) { charts[id].data = cfg.data; charts[id].options = cfg.options; charts[id].update(); }
+  else charts[id] = new Chart($(id), cfg);
+}
+
+const API = "https://script.google.com/macros/s/AKfycbx5S_RkPcfPOCxHi3lM3YiKITle-2KUiANRl3W9YpjAwNeV1lRIl48Gn8vnC5dve4tWvg/exec";
+function getKey() {
+  const fromUrl = new URLSearchParams(location.hash.slice(1)).get("k") || new URLSearchParams(location.search).get("k");
+  try { if (fromUrl) localStorage.setItem("fe_k", fromUrl); return fromUrl || localStorage.getItem("fe_k") || ""; } catch (e) { return fromUrl || ""; }
+}
+const KEYP = getKey();
+function onData(d) {
+  $("refresh").textContent = "Refresh";
+  banner("");
+  for (const k of Object.keys(RENDER)) { state[k] = d[k] || []; }
+  for (const k of ["tiles", "month", "cat", "food", "fuelP", "odo"]) { try { RENDER[k](); } catch (e) { console.log(e); } }
+  $("updated").textContent = "Updated " + new Date(d.at).toLocaleString("en-IN", {day: "numeric", month: "short", hour: "numeric", minute: "2-digit"});
+}
+function onFail(msg) {
+  $("refresh").textContent = "Refresh";
+  if (/not valid/i.test(msg)) banner("This link is not valid. Ask Abhijith for the current app link.", "err");
+  else banner("Could not load the sheet just now: " + esc(msg) + ". Tap Refresh to try again.", "err");
+}
+async function load() {
+  if (!KEYP) { onFail("This link is not valid."); return; }
+  $("refresh").textContent = "…";
+  try {
+    const r = await fetch(API + "?fmt=json&k=" + encodeURIComponent(KEYP), {cache: "no-store", credentials: "omit"});
+    const d = await r.json();
+    if (d.error) onFail(d.error); else onData(d);
+  } catch (e) { onFail(String(e.message || e)); }
+}
+$("refresh").onclick = load;
+document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+setInterval(() => { if (!document.hidden) load(); }, 120000);
+load();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
