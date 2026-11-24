@@ -114,11 +114,87 @@
   .banner{margin-top:18px;padding:14px 16px;border-radius:18px;font-size:14px;line-height:1.45;background:#2a0f10;border:1px solid #4a1c1e;color:#ffc9ca}
   footer{margin-top:38px;text-align:center;font-size:12px;color:var(--faint);line-height:1.6}
   .skel{color:var(--faint)}
+
+  /* tabs */
+  .view{display:none}
+  .view.on{display:block;animation:fade .25s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .wrap{padding-bottom:calc(env(safe-area-inset-bottom) + 110px)}
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:8px 10px calc(env(safe-area-inset-bottom) + 8px);background:rgba(10,10,10,.82);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid #1f1f1f}
+  nav.tabs .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+  nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;font-size:11px;font-weight:600;color:var(--faint);border-radius:14px}
+  nav.tabs button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  nav.tabs button.on{color:var(--gold)}
+  .vhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+  .vhead .t{font-size:34px;font-weight:800;letter-spacing:-.8px;line-height:1.05}
+  .vhead .s{font-size:14px;color:var(--dim);margin-top:6px}
+
+  /* transactions */
+  .search{margin-top:20px;display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:0 14px}
+  .search svg{width:18px;height:18px;stroke:var(--faint);fill:none;stroke-width:2;flex:none}
+  .search input{flex:1;background:none;border:0;color:var(--ink);font:500 15px Urbanist,sans-serif;padding:14px 0;outline:none}
+  .search input::placeholder{color:var(--faint)}
+  .chips{display:flex;gap:8px;overflow-x:auto;margin:14px -20px 0;padding:0 20px 4px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;padding:8px 14px;border-radius:999px;background:var(--s1);border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--dim);white-space:nowrap}
+  .chip.on{background:var(--ink);color:#000;border-color:var(--ink)}
+  .sum{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;font-size:14px;color:var(--dim)}
+  .sum b{font-size:22px;color:var(--ink);font-weight:800;letter-spacing:-.4px}
+  .day{margin-top:22px}
+  .day .dh{display:flex;justify-content:space-between;font-size:13px;color:var(--dim);font-weight:600;padding:0 4px 8px}
+  .tx{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);text-align:left;width:100%}
+  .tx:first-child{border-top:0}
+  .tx .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:19px;line-height:1}
+  .tx .d{min-width:0}
+  .tx .d .a1{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tx .d .a2{font-size:12px;color:var(--faint);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tx .amt{font-size:15px;font-weight:700;white-space:nowrap}
+  .tx .more{grid-column:2/4;font-size:13px;color:var(--dim);line-height:1.5;display:none;padding:0;border:0;text-align:left;color:var(--dim)}
+  .tx.open .more{display:block}
+  .tx .d .a1{white-space:nowrap}
+  .tx.open .d .a1{white-space:normal}
+
+  /* trends */
+  .mcards{display:grid;gap:12px;margin-top:14px}
+  .mc{background:var(--s1);border:1px solid var(--line);border-radius:22px;padding:18px}
+  .mc .h{display:flex;justify-content:space-between;align-items:baseline}
+  .mc .h b{font-size:18px;font-weight:700}
+  .mc .h span{font-size:13px;color:var(--mint);font-weight:700}
+  .mc .h span.neg{color:var(--red)}
+  .dual{margin-top:14px;display:grid;gap:8px}
+  .dual .ln{display:grid;grid-template-columns:70px 1fr 92px;gap:10px;align-items:center;font-size:13px;color:var(--dim)}
+  .dual .ln .tr{height:10px;border-radius:999px;background:#1f1f1f;overflow:hidden}
+  .dual .ln .tr b{display:block;height:100%;border-radius:999px}
+  .dual .ln .r{text-align:right;color:var(--ink);font-weight:700}
+  .daily{display:flex;align-items:flex-end;gap:3px;height:140px;margin-top:18px}
+  .daily span{flex:1;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,var(--gold),var(--gold2));min-height:2px;position:relative}
+  .daily span.z{background:#1f1f1f}
+  .daily span.today{outline:1.5px solid var(--ink);outline-offset:1px}
+  .dlbl{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:8px}
+  .toggle{display:flex;gap:8px;margin-top:14px}
+  .wkrow{display:grid;grid-template-columns:96px 1fr 84px;gap:12px;align-items:center;padding:10px 0;font-size:13px;border-top:1px solid var(--line)}
+  .wkrow:first-of-type{border-top:0}
+  .wkrow .l{color:var(--dim)} .wkrow .r{text-align:right;font-weight:700}
+  .wkrow .tr{height:8px;background:#1f1f1f;border-radius:999px;overflow:hidden}
+  .wkrow .tr b{display:block;height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));border-radius:999px}
+  .mname{font-size:13px;color:var(--ink);font-weight:700;padding:14px 0 6px}
+  .chg{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line);font-size:14px}
+  .chg:first-child{border-top:0}
+  .chg .p{font-size:12px;font-weight:700}
+  .up{color:var(--red)} .down{color:var(--mint)}
+
+  /* income */
+  .inhero{margin-top:22px;padding:24px 22px;border-radius:28px;background:linear-gradient(160deg,#0f241c 0%,#0a0f0d 60%);border:1px solid #1d3a2e}
+  .inhero .lbl{font-size:14px;color:#9cc7b3}
+  .inhero .big2{font-size:48px;font-weight:800;letter-spacing:-1.4px;margin-top:8px;color:var(--mint)}
+  .inhero .of{color:#9cc7b3}
+  @media (prefers-reduced-motion:reduce){.view.on{animation:none}}
   @media (prefers-reduced-motion:reduce){.bar span{animation:none}.refresh.spin svg{animation:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
+<div class="view on" id="v-home">
   <div class="top">
     <div>
       <h1>Family Expenses</h1>
@@ -167,9 +243,46 @@
     </div>
   </section>
 
+  <footer>A read-only view of the Family Expense Tracker sheet.<br>Send new expenses to Claude and they appear here.</footer>
+</div>
+<div class="view" id="v-tx">
+  <div class="vhead"><div><div class="t">Spends</div><div class="s">Every expense, newest first</div></div></div>
+  <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search item, shop or category" autocomplete="off"></label>
+  <div class="chips" id="mchips"></div>
+  <div class="chips" id="cchips"></div>
+  <div class="sum"><span id="sumLbl">Total</span><b id="sumVal">—</b></div>
+  <div id="txlist"></div>
+</div>
+<div class="view" id="v-trends">
+  <div class="vhead"><div><div class="t">Trends</div><div class="s">How spending moves over time</div></div></div>
+  <section style="margin-top:24px">
+    <h2>Daily spending</h2>
+    <div class="sub" id="dailySub">This month</div>
+    <div class="toggle"><button class="chip on" id="exIns" type="button">Without insurance & EMI</button><button class="chip" id="inIns" type="button">Everything</button></div>
+    <div class="panel" style="padding:16px 18px">
+      <div class="daily" id="daily"></div>
+      <div class="dlbl" id="dlbl"></div>
+    </div>
+  </section>
   <section>
-    <h2>Car</h2>
-    <div class="sub">From odometer readings and fuel bills</div>
+    <h2>Month by month</h2>
+    <div class="sub">Income, spending and what was saved</div>
+    <div class="mcards" id="mcards"></div>
+  </section>
+  <section>
+    <h2>Week by week</h2>
+    <div class="sub">This month and last month</div>
+    <div class="panel" id="weeks"></div>
+  </section>
+  <section>
+    <h2>Compared with last month</h2>
+    <div class="sub">Categories that moved the most</div>
+    <div class="panel" id="changes"></div>
+  </section>
+</div>
+<div class="view" id="v-car">
+  <div class="vhead"><div><div class="t">Car</div><div class="s">From odometer readings and fuel bills</div></div></div>
+  <section style="margin-top:8px">
     <div class="car">
       <div><div class="k">Odometer</div><div class="v" id="odo">—</div></div>
       <div><div class="k">Km logged</div><div class="v" id="km">—</div></div>
@@ -184,9 +297,31 @@
     </div>
   </section>
 
-  <footer>A read-only view of the Family Expense Tracker sheet.<br>Send new expenses to Claude and they appear here.</footer>
 </div>
-
+<div class="view" id="v-inc">
+  <div class="vhead"><div><div class="t">Income</div><div class="s">Salary and everything else that came in</div></div></div>
+  <div class="inhero">
+    <div class="lbl" id="incLbl">This month</div>
+    <div class="big2" id="incBig">—</div>
+    <div class="of" id="incOf"></div>
+  </div>
+  <section>
+    <h2>By source</h2>
+    <div class="panel" id="incSrc"></div>
+  </section>
+  <section>
+    <h2>All entries</h2>
+    <div id="inclist"></div>
+  </section>
+</div>
+</div>
+<nav class="tabs" aria-label="Sections"><div class="in">
+  <button class="on" data-v="home" type="button"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button data-v="tx" type="button"><svg viewBox="0 0 24 24"><path d="M5 4h14v17l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 9h6M9 13h6"/></svg>Spends</button>
+  <button data-v="trends" type="button"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19H2"/></svg>Trends</button>
+  <button data-v="car" type="button"><svg viewBox="0 0 24 24"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg>Car</button>
+  <button data-v="inc" type="button"><svg viewBox="0 0 24 24"><path d="M7 4h11M7 8.5h11M8 4h3a4.5 4.5 0 0 1 0 9H8l8 8"/></svg>Income</button>
+</div></nav>
 <script>
 const API = "https://script.google.com/macros/s/AKfycbx5S_RkPcfPOCxHi3lM3YiKITle-2KUiANRl3W9YpjAwNeV1lRIl48Gn8vnC5dve4tWvg/exec";
 const PAL = ["#d9c3a0","#7cb7ff","#b79cff","#ffb547","#7fe3b8","#f29bc0","#9fd6e8"];
@@ -291,8 +426,162 @@ function render(d) {
     `<div class="hb"><span class="l">${esc(r[0])}</span><span class="tr"><b style="width:${(num(r[1]) / fmax * 100).toFixed(1)}%"></b></span><span class="r">${inr(num(r[1]))}</span></div>`).join("")
     : `<div class="empty">No fuel bills yet.</div>`);
 
+  try { prepTx(d); renderTx(); renderTrends(d); renderIncome(d); } catch (e) { console.log(e); }
   $("updated").textContent = "Updated " + new Date(d.at).toLocaleString("en-IN", {day: "numeric", month: "short", hour: "numeric", minute: "2-digit"});
 }
+
+/* ---------- shared helpers for the tabs ---------- */
+const MON3 = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const MNAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const pdate = s => { const x = /^(\d{1,2}) (\w{3}) (\d{4})$/.exec(String(s || "").trim()); return x ? new Date(+x[3], MON3[x[2]], +x[1]) : null; };
+const mkey = dt => dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0");
+const mlabel = k => { const [y, m] = k.split("-"); return MNAMES[+m - 1].slice(0, 3) + " " + y; };
+const CAT_COL = {};
+const GLYPH = {"Groceries":"🛒","Vegetables & fruits":"🥕","Milk & dairy":"🥛","Meat & fish":"🐟","Eating out":"🍽️","Fuel":"⛽","Transport & travel":"🚗","Electricity":"💡","Water":"💧","Gas (LPG)":"🔥","Mobile & internet":"📶","Rent / maintenance":"🏠","Medical & pharmacy":"💊","Kids (Kaushik)":"🧸","Education":"📚","Clothing":"👕","Personal care":"🧴","Household items":"🧺","Repairs":"🔧","Gifts & functions":"🎁","Donations / temple":"🪔","Entertainment & subscriptions":"🎬","Insurance & EMI":"🛡️","Miscellaneous":"📦","Salary":"💼"};
+const glyph = c => GLYPH[c] || "•";
+const tint = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+function colorFor(cat) {
+  if (cat === "Eating out") return RED;
+  if (!CAT_COL[cat]) CAT_COL[cat] = PAL[Object.keys(CAT_COL).length % PAL.length];
+  return CAT_COL[cat];
+}
+let TX = [], INC = [], txMonth = "all", txCat = "all", dailyNoIns = true;
+
+function prepTx(d) {
+  TX = (d.tx || []).map((r, i) => ({i, date: pdate(r[0]), ds: r[0], cat: r[1] || "Miscellaneous", desc: r[2] || r[1], shop: r[3] || "", amt: num(r[4]), mode: r[5] || "", by: r[6] || "", notes: r[7] || ""}))
+    .filter(t => t.date).sort((a, b) => b.date - a.date || b.i - a.i);
+  INC = (d.inc || []).map((r, i) => ({i, date: pdate(r[0]), ds: r[0], src: r[1] || "Other", by: r[2] || "", amt: num(r[3]), mode: r[4] || "", notes: r[5] || ""}))
+    .filter(t => t.date).sort((a, b) => b.date - a.date || b.i - a.i);
+  // keep category colours in the same order as the home screen
+  (d.cat || []).filter(r => r[0] && num(r[1]) > 0).sort((a, b) => num(b[1]) - num(a[1])).forEach(r => colorFor(r[0]));
+}
+
+/* ---------- Spends ---------- */
+function renderTx() {
+  const months = [...new Set(TX.map(t => mkey(t.date)))];
+  if (txMonth !== "all" && !months.includes(txMonth)) txMonth = "all";
+  $("mchips").innerHTML = [`<button class="chip ${txMonth === "all" ? "on" : ""}" data-m="all" type="button">All months</button>`]
+    .concat(months.map(m => `<button class="chip ${txMonth === m ? "on" : ""}" data-m="${m}" type="button">${mlabel(m)}</button>`)).join("");
+  const inMonth = TX.filter(t => txMonth === "all" || mkey(t.date) === txMonth);
+  const cats = [...new Set(inMonth.map(t => t.cat))].sort((a, b) => inMonth.filter(t => t.cat === b).reduce((s, t) => s + t.amt, 0) - inMonth.filter(t => t.cat === a).reduce((s, t) => s + t.amt, 0));
+  if (txCat !== "all" && !cats.includes(txCat)) txCat = "all";
+  $("cchips").innerHTML = [`<button class="chip ${txCat === "all" ? "on" : ""}" data-c="all" type="button">All categories</button>`]
+    .concat(cats.map(c => `<button class="chip ${txCat === c ? "on" : ""}" data-c="${esc(c)}" type="button">${esc(c)}</button>`)).join("");
+  const q = ($("q").value || "").trim().toLowerCase();
+  const list = inMonth.filter(t => (txCat === "all" || t.cat === txCat) && (!q || (t.desc + " " + t.shop + " " + t.cat + " " + t.notes).toLowerCase().includes(q)));
+  const tot = list.reduce((s, t) => s + t.amt, 0);
+  $("sumLbl").textContent = list.length === 1 ? "1 entry" : `${list.length} entries`;
+  $("sumVal").textContent = inr(tot);
+  if (!list.length) { $("txlist").innerHTML = `<div class="empty" style="padding-top:24px">${TX.length ? "Nothing matches. Clear the search or pick another category." : "No expenses yet. Send one to Claude, like \"milk 60\"."}</div>`; return; }
+  const byDay = [];
+  list.forEach(t => { const k = t.ds; let g = byDay.find(x => x.k === k); if (!g) byDay.push(g = {k, date: t.date, items: []}); g.items.push(t); });
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const dayName = dt => { const diff = Math.round((today - dt) / 864e5); if (diff === 0) return "Today"; if (diff === 1) return "Yesterday"; return dt.toLocaleDateString("en-IN", {weekday: "short", day: "numeric", month: "short"}); };
+  $("txlist").innerHTML = byDay.map(g => `<div class="day"><div class="dh"><span>${dayName(g.date)}</span><span>${inr(g.items.reduce((s, t) => s + t.amt, 0))}</span></div>
+    <div class="panel" style="padding:2px 16px">${g.items.map(t => {
+      const c = colorFor(t.cat);
+      const sub = [t.cat, t.shop].filter(Boolean).join(", ");
+      const more = [[t.mode && "Paid by " + t.mode, t.by && "spent by " + t.by].filter(Boolean).join(", "), t.notes].filter(Boolean).join(". ");
+      return `<button class="tx" type="button" aria-expanded="false"><span class="ic" style="background:${tint(c, .16)};box-shadow:inset 0 0 0 1px ${tint(c, .35)}">${glyph(t.cat)}</span>
+        <span class="d"><span class="a1" style="display:block">${esc(t.desc)}</span><span class="a2" style="display:block">${esc(sub)}</span></span>
+        <span class="amt">${inr(t.amt)}</span>${more ? `<span class="more">${esc(more)}</span>` : ""}</button>`;
+    }).join("")}</div></div>`).join("");
+}
+document.addEventListener("click", e => {
+  const m = e.target.closest("[data-m]"); if (m) { txMonth = m.dataset.m; renderTx(); return; }
+  const c = e.target.closest("[data-c]"); if (c) { txCat = c.dataset.c; renderTx(); return; }
+  const t = e.target.closest(".tx"); if (t) { t.classList.toggle("open"); t.setAttribute("aria-expanded", t.classList.contains("open")); }
+});
+
+/* ---------- Trends ---------- */
+function renderTrends(d) {
+  // daily bars for the current month
+  const now = new Date();
+  const latest = TX[0] ? TX[0].date : now;
+  const ref = latest > now ? latest : now;
+  const y = ref.getFullYear(), mo = ref.getMonth(), days = new Date(y, mo + 1, 0).getDate();
+  const per = Array(days).fill(0);
+  TX.forEach(t => { if (t.date.getFullYear() === y && t.date.getMonth() === mo && !(dailyNoIns && t.cat === "Insurance & EMI")) per[t.date.getDate() - 1] += t.amt; });
+  const mx = Math.max(1, ...per);
+  const todayN = (now.getFullYear() === y && now.getMonth() === mo) ? now.getDate() : 0;
+  $("daily").innerHTML = per.map((v, i) => `<span class="${v ? "" : "z"} ${i + 1 === todayN ? "today" : ""}" style="height:${v ? Math.max(4, v / mx * 100) : 2}%" title="${i + 1} ${MNAMES[mo].slice(0, 3)}: ${inr(v)}"></span>`).join("");
+  $("dlbl").innerHTML = `<span>1</span><span>${Math.ceil(days / 2)}</span><span>${days}</span>`;
+  const sumD = per.reduce((a, b) => a + b, 0), act = per.filter(Boolean).length;
+  $("dailySub").textContent = `${MNAMES[mo]}: ${inr(sumD)} over ${act} spending ${act === 1 ? "day" : "days"}` + (act ? `, about ${inr(sumD / Math.max(1, todayN || days))} a day` : "");
+  $("exIns").className = "chip" + (dailyNoIns ? " on" : ""); $("inIns").className = "chip" + (dailyNoIns ? "" : " on");
+
+  // month cards
+  const ms = (d.months || []).filter(r => r[0] && r[0] !== "All months");
+  const mmax = Math.max(1, ...ms.map(r => Math.max(num(r[1]), num(r[2]))));
+  $("mcards").innerHTML = ms.length ? ms.slice().reverse().map(r => {
+    const inc = num(r[1]), exp = num(r[2]), sav = num(r[3]);
+    return `<div class="mc"><div class="h"><b>${esc(r[0])}</b><span class="${sav < 0 ? "neg" : ""}">${sav < 0 ? "Overspent" : "Saved"} ${esc(r[4] || "")}</span></div>
+      <div class="dual">
+        <div class="ln"><span>Income</span><span class="tr"><b style="width:${(inc / mmax * 100).toFixed(1)}%;background:var(--mint)"></b></span><span class="r">${inr(inc)}</span></div>
+        <div class="ln"><span>Spent</span><span class="tr"><b style="width:${(exp / mmax * 100).toFixed(1)}%;background:linear-gradient(90deg,var(--gold2),var(--gold))"></b></span><span class="r">${inr(exp)}</span></div>
+        <div class="ln"><span>Saved</span><span></span><span class="r" style="color:${sav < 0 ? "var(--red)" : "var(--mint)"}">${inr(sav)}</span></div>
+      </div></div>`;
+  }).join("") : `<div class="empty">Month-wise history starts with your first entry.</div>`;
+
+  // weeks
+  const w = (d.weekly || []).filter(r => r[1]);
+  const wmax = Math.max(1, ...w.filter(r => r[1] !== "Month total").map(r => num(r[4])));
+  let html = "", cur = "";
+  w.forEach(r => {
+    if (r[0]) { cur = r[0]; html += `<div class="mname">${esc(cur)}</div>`; }
+    if (r[1] === "Month total") { html += `<div class="wkrow"><span class="l" style="color:var(--ink);font-weight:700">Month total</span><span></span><span class="r">${inr(num(r[4]))}</span></div>`; return; }
+    html += `<div class="wkrow"><span class="l">${esc(wkLabel(r[2], r[3]))}</span><span class="tr"><b style="width:${(num(r[4]) / wmax * 100).toFixed(1)}%"></b></span><span class="r">${num(r[4]) ? inr(num(r[4])) : "—"}</span></div>`;
+  });
+  $("weeks").innerHTML = html || `<div class="empty">No weekly figures yet.</div>`;
+
+  // compared with last month (by category, from transactions)
+  const thisK = y + "-" + String(mo + 1).padStart(2, "0");
+  const pd = new Date(y, mo - 1, 1), prevK = mkey(pd);
+  const sumBy = k => { const o = {}; TX.forEach(t => { if (mkey(t.date) === k) o[t.cat] = (o[t.cat] || 0) + t.amt; }); return o; };
+  const a = sumBy(thisK), b = sumBy(prevK);
+  const hasPrev = Object.keys(b).length > 0;
+  if (!hasPrev) { $("changes").innerHTML = `<div class="empty">This fills in once there is a full month to compare with. ${MNAMES[pd.getMonth()]} has no entries yet.</div>`; return; }
+  const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])].map(k => ({k, now: a[k] || 0, was: b[k] || 0})).map(x => ({...x, diff: x.now - x.was})).sort((p, q) => Math.abs(q.diff) - Math.abs(p.diff)).slice(0, 8);
+  $("changes").innerHTML = keys.map(x => `<div class="chg"><span>${esc(x.k)}</span><span style="color:var(--dim)">${inr(x.was)} → ${inr(x.now)}</span><span class="p ${x.diff > 0 ? "up" : "down"}">${x.diff > 0 ? "+" : "−"}${inr(Math.abs(x.diff)).replace("₹", "₹")}</span></div>`).join("");
+}
+$("exIns") && ($("exIns").onclick = () => { dailyNoIns = true; if (last) renderTrends(last); });
+$("inIns") && ($("inIns").onclick = () => { dailyNoIns = false; if (last) renderTrends(last); });
+
+function wkLabel(a, b) { const x = String(a).split(" "), y = String(b).split(" "); return x[1] === y[1] ? `${+x[0]}–${+y[0]} ${x[1]}` : `${+x[0]} ${x[1]} – ${+y[0]} ${y[1]}`; }
+
+/* ---------- Income ---------- */
+function renderIncome(d) {
+  const m = (d.month || [[]])[0] || [];
+  const incM = num(m[0]), spent = num(m[2]);
+  const tl = (d.tiles || [[]])[0] || [];
+  const monthName = ((tl[2] || "").match(/\(([^)]+)\)/) || [])[1] || "This month";
+  $("incLbl").textContent = monthName;
+  $("incBig").textContent = inr(incM);
+  $("incOf").textContent = incM ? `${Math.round(spent / incM * 100)}% of it spent so far, ${inr(incM - spent)} left` : "No income logged this month yet";
+  const bySrc = {}; INC.forEach(t => bySrc[t.src] = (bySrc[t.src] || 0) + t.amt);
+  const src = Object.entries(bySrc).sort((a, b) => b[1] - a[1]); const smax = src[0] ? src[0][1] : 1;
+  $("incSrc").innerHTML = src.length ? `<div class="hbars">` + src.map(([k, v]) => `<div class="hb"><span class="l">${esc(k)}</span><span class="tr"><b style="width:${(v / smax * 100).toFixed(1)}%;background:linear-gradient(90deg,#3fae84,var(--mint))"></b></span><span class="r">${inr(v)}</span></div>`).join("") + `</div>`
+    : `<div class="empty">No income yet. Send it to Claude, like "salary 1.5L".</div>`;
+  const byM = []; INC.forEach(t => { const k = mkey(t.date); let g = byM.find(x => x.k === k); if (!g) byM.push(g = {k, items: []}); g.items.push(t); });
+  $("inclist").innerHTML = byM.map(g => `<div class="day"><div class="dh"><span>${mlabel(g.k)}</span><span>${inr(g.items.reduce((s, t) => s + t.amt, 0))}</span></div>
+    <div class="panel" style="padding:2px 16px">${g.items.map(t => `<div class="tx" style="cursor:default"><span class="ic" style="background:rgba(127,227,184,.14);box-shadow:inset 0 0 0 1px rgba(127,227,184,.35)">${GLYPH[t.src] || "💰"}</span>
+      <span class="d"><span class="a1" style="display:block">${esc(t.src)}</span><span class="a2" style="display:block">${esc([short(t.ds), t.mode, t.by].filter(Boolean).join(", "))}</span></span>
+      <span class="amt" style="color:var(--mint)">+${inr(t.amt)}</span></div>`).join("")}</div></div>`).join("");
+}
+
+/* ---------- tab bar ---------- */
+let VIEW = "home";
+try { VIEW = localStorage.getItem("fe_view") || "home"; } catch (e) {}
+function show(v) {
+  VIEW = v;
+  document.querySelectorAll(".view").forEach(x => x.classList.toggle("on", x.id === "v-" + v));
+  document.querySelectorAll("nav.tabs button").forEach(b => { const on = b.dataset.v === v; b.classList.toggle("on", on); b.setAttribute("aria-current", on ? "page" : "false"); });
+  try { localStorage.setItem("fe_view", v); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
+$("q").addEventListener("input", renderTx);
+show(VIEW);
 
 function getKey() {
   const u = new URLSearchParams(location.hash.slice(1)).get("k") || new URLSearchParams(location.search).get("k");
