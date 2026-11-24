@@ -3,273 +3,320 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1B4332">
+<meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Family Expenses</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&text=%E2%82%B9%E2%88%92&display=swap" rel="stylesheet">
 <style>
   :root{
-    --dg:#1B4332; --mg:#2D6A4F; --g3:#40916C; --g4:#74C69D; --g5:#B7E4C7; --lb:#E9F5EE;
-    --bg:#F4F8F5; --card:#FFFFFF; --ink:#16241C; --muted:#5F7A6B; --line:#DCE8E0; --red:#C0392B;
+    --bg:#000; --s1:#121212; --s2:#1a1a1a; --line:#262626;
+    --ink:#f4f1ea; --dim:#9a968e; --faint:#5c5a55;
+    --gold:#d9c3a0; --gold2:#b89b6c; --mint:#7fe3b8; --red:#ff5a5f;
+    --c1:#d9c3a0; --c2:#7cb7ff; --c3:#b79cff; --c4:#ffb547; --c5:#7fe3b8; --c6:#6b6b6b;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
-  header{background:var(--dg);color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 18px 16px;position:sticky;top:0;z-index:5}
-  header .row{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:760px;margin:0 auto}
-  header h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.1px}
-  header .sub{font-size:12px;color:#CDE8D6;margin-top:3px}
-  .btn{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:999px;padding:8px 14px;font:600 13px Inter,sans-serif;cursor:pointer}
-  .btn:active{background:rgba(255,255,255,.26)}
-  .btn.solid{background:var(--dg);color:#fff}
-  main{max-width:760px;margin:0 auto;padding:14px 14px calc(env(safe-area-inset-bottom) + 28px)}
-  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .tile{background:var(--card);border-radius:14px;padding:13px 14px;border:1px solid var(--line)}
-  .tile .k{font-size:12px;color:var(--muted);font-weight:500}
-  .tile .v{font-size:21px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .tile.hero{grid-column:1/-1;background:var(--dg);border-color:var(--dg);color:#fff}
-  .tile.hero .k{color:#CDE8D6}
-  .tile.hero .v{font-size:30px}
-  .tile.hero .split{display:flex;gap:18px;margin-top:10px;font-size:13px;color:#CDE8D6}
-  .tile.hero .split b{display:block;color:#fff;font-size:16px;margin-top:2px;font-variant-numeric:tabular-nums}
-  .neg{color:var(--red)!important}
-  .tile.eat{background:#C0392B;border-color:#C0392B;color:#fff}
-  .tile.eat .k{color:#F8D7D3}
-  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px}
-  section.card h2{font-size:15px;margin:0 0 10px;color:var(--dg);font-weight:700}
-  .chartbox{position:relative;height:240px}
-  .chartbox.tall{height:270px}
-  .list{list-style:none;margin:8px 0 0;padding:0}
-  .list li{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-top:1px solid var(--line);font-size:14px;gap:10px}
-  .list li:first-child{border-top:0}
-  .list .amt{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;flex:none}
-  .muted{color:var(--muted);font-size:12px}
-  .tx .l{min-width:0}
-  .tx .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .tx .m{font-size:12px;color:var(--muted);margin-top:2px}
-  .tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-  .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:600 12px Inter,sans-serif;color:var(--muted);cursor:pointer}
-  .tab.on{background:var(--dg);color:#fff;border-color:var(--dg)}
-  .note{background:#FFF8E6;border:1px solid #F1DFA8;color:#5C4A12;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:12px}
-  .note.err{background:#FDECEA;border-color:#F3C1BB;color:#7A1F16}
-  .note button{margin-top:10px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .mini{background:var(--lb);border-radius:10px;padding:10px 12px}
-  .mini .k{font-size:12px;color:var(--muted)}
-  .mini .v{font-size:17px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
-  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-  th{text-align:left;color:var(--muted);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--line)}
-  td{padding:8px 4px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-  td.r,th.r{text-align:right}
-  .skeleton{color:var(--muted);font-size:13px;padding:6px 0}
-  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
-  @media (min-width:640px){ .tiles{grid-template-columns:repeat(4,1fr)} .tile.hero{grid-column:span 4} }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:Urbanist,"Inter Tight",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"lnum" 1}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+  .wrap{max-width:520px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 18px) 20px calc(env(safe-area-inset-bottom) + 40px)}
+
+  /* top bar */
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .top h1{font-size:15px;font-weight:600;color:var(--dim);letter-spacing:.2px}
+  .top .month{font-size:34px;font-weight:800;letter-spacing:-.8px;line-height:1.05;margin-top:2px}
+  .refresh{width:44px;height:44px;border-radius:50%;background:var(--s1);border:1px solid var(--line);display:grid;place-items:center;flex:none}
+  .refresh svg{width:20px;height:20px;stroke:var(--ink)}
+  .refresh.spin svg{animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .updated{font-size:13px;color:var(--faint);margin-top:6px}
+
+  /* hero */
+  .hero{margin-top:26px;padding:24px 22px 22px;border-radius:28px;background:linear-gradient(160deg,#1c1a17 0%,#0e0e0e 55%);border:1px solid #2c2924;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;background:radial-gradient(120% 60% at 100% 0%,rgba(217,195,160,.10),transparent 60%)}
+  .hero .lbl{font-size:14px;color:var(--dim);font-weight:500}
+  .big{font-size:52px;font-weight:800;letter-spacing:-1.6px;line-height:1;margin-top:8px;background:linear-gradient(180deg,#fff 0%,#e8dcc6 70%,#c9b28b 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .big .rs{font-size:30px;vertical-align:top;margin-right:2px;position:relative;top:6px}
+  .of{font-size:15px;color:var(--dim);margin-top:10px}
+  .of b{color:var(--ink);font-weight:700}
+  .bar{display:flex;height:14px;border-radius:999px;overflow:hidden;background:#232220;margin-top:20px;gap:2px}
+  .bar span{display:block;height:100%;transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+  .bar .save{background:repeating-linear-gradient(135deg,rgba(127,227,184,.85) 0 4px,rgba(127,227,184,.45) 4px 8px)}
+  @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px;font-size:13px;color:var(--dim)}
+  .legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;padding-top:18px;border-top:1px solid #2a2824}
+  .split .k{font-size:13px;color:var(--dim)}
+  .split .v{font-size:22px;font-weight:700;margin-top:4px;letter-spacing:-.3px}
+  .v.mint{color:var(--mint)} .v.red{color:var(--red)}
+  .note{font-size:13px;color:var(--faint);margin-top:14px;line-height:1.45}
+
+  /* stat grid */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .stat{background:var(--s1);border:1px solid var(--line);border-radius:22px;padding:16px 16px 18px}
+  .stat .k{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:8px}
+  .stat .k i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .stat .v{font-size:26px;font-weight:800;letter-spacing:-.6px;margin-top:10px}
+  .stat .s{font-size:12px;color:var(--faint);margin-top:4px}
+  .stat.eat{background:linear-gradient(160deg,#2a0f10,#140808);border-color:#3d1617}
+  .stat.eat .v{color:var(--red)}
+
+  /* sections */
+  section{margin-top:34px}
+  section h2{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  section .sub{font-size:13px;color:var(--faint);margin-top:4px}
+  .panel{background:var(--s1);border:1px solid var(--line);border-radius:24px;padding:6px 18px;margin-top:14px}
+  .row{padding:14px 0;border-top:1px solid var(--line)}
+  .row:first-child{border-top:0}
+  .row .t{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .row .n{font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px;min-width:0}
+  .row .n i{width:10px;height:10px;border-radius:3px;flex:none}
+  .row .n span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .a{font-size:15px;font-weight:700;white-space:nowrap}
+  .row .a small{font-size:12px;color:var(--faint);font-weight:500;margin-left:6px}
+  .row .track{height:4px;border-radius:999px;background:#232323;margin-top:10px;overflow:hidden}
+  .row .track b{display:block;height:100%;border-radius:999px}
+  .more{display:block;width:100%;text-align:center;padding:14px 0 12px;font-size:14px;font-weight:600;color:var(--gold);border-top:1px solid var(--line)}
+
+  /* columns chart */
+  .cols{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:end;height:190px;margin-top:18px;padding:0 4px}
+  .col{display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;gap:8px}
+  .stack{width:100%;max-width:46px;display:flex;flex-direction:column-reverse;border-radius:12px;overflow:hidden;background:#1d1d1d;min-height:4px}
+  .stack span{display:block;width:100%}
+  .col .tot{font-size:13px;font-weight:700}
+  .col .wk{font-size:11px;color:var(--faint);text-align:center;line-height:1.3}
+  .flegend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;color:var(--dim);padding:16px 4px 14px}
+  .flegend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+
+  /* car */
+  .car{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:14px;background:var(--s1);border:1px solid var(--line);border-radius:24px;overflow:hidden}
+  .car>div{padding:16px 18px}
+  .car>div:nth-child(odd){border-right:1px solid var(--line)}
+  .car>div:nth-child(n+3){border-top:1px solid var(--line)}
+  .car .v small{font-size:13px;color:var(--dim);font-weight:600;margin-left:3px}
+  .car .k{font-size:13px;color:var(--dim)}
+  .car .v{font-size:20px;font-weight:700;margin-top:6px;letter-spacing:-.3px}
+  .hbars{margin-top:12px}
+  .hb{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;padding:10px 0;font-size:13px}
+  .hb .l{color:var(--dim)}
+  .hb .tr{height:8px;background:#1f1f1f;border-radius:999px;overflow:hidden}
+  .hb .tr b{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold2),var(--gold))}
+  .hb .r{font-weight:700}
+  .empty{font-size:14px;color:var(--faint);padding:16px 0;line-height:1.5}
+
+  .banner{margin-top:18px;padding:14px 16px;border-radius:18px;font-size:14px;line-height:1.45;background:#2a0f10;border:1px solid #4a1c1e;color:#ffc9ca}
+  footer{margin-top:38px;text-align:center;font-size:12px;color:var(--faint);line-height:1.6}
+  .skel{color:var(--faint)}
+  @media (prefers-reduced-motion:reduce){.bar span{animation:none}.refresh.spin svg{animation:none}}
 </style>
 </head>
 <body>
-<header>
-  <div class="row">
+<div class="wrap">
+  <div class="top">
     <div>
       <h1>Family Expenses</h1>
-      <div class="sub" id="updated">Loading…</div>
+      <div class="month" id="month">This month</div>
+      <div class="updated" id="updated">Loading…</div>
     </div>
-    <button class="btn" id="refresh" type="button">Refresh</button>
+    <button class="refresh" id="refresh" type="button" aria-label="Refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/></svg>
+    </button>
   </div>
-</header>
 
-<main>
   <div id="banner"></div>
 
-  <div class="tiles">
-    <div class="tile hero">
-      <div class="k" id="monthLabel">This month</div>
-      <div class="v" id="t_mexp">—</div>
-      <div class="split">
-        <div>Income<b id="t_minc">—</b></div>
-        <div>Savings<b id="t_msav">—</b></div>
-      </div>
+  <div class="hero">
+    <div class="lbl">Spent this month</div>
+    <div class="big" id="spent"><span class="rs">₹</span>—</div>
+    <div class="of" id="of">of income</div>
+    <div class="bar" id="bar" role="img" aria-label="Where this month's income went"></div>
+    <div class="legend" id="legend"></div>
+    <div class="split">
+      <div><div class="k">Income</div><div class="v" id="inc">—</div></div>
+      <div><div class="k">Saved</div><div class="v mint" id="sav">—</div></div>
     </div>
-    <div class="tile"><div class="k">Total expense</div><div class="v" id="t_total">—</div></div>
-    <div class="tile eat"><div class="k">Eating out (month)</div><div class="v" id="t_eat">—</div></div>
-    <div class="tile"><div class="k">Fuel (month)</div><div class="v" id="t_fuel">—</div></div>
-    <div class="tile"><div class="k" id="t_cpk_k">Cost per km</div><div class="v" id="t_cpk">—</div></div>
+    <div class="note" id="everyday"></div>
   </div>
 
-  <section class="card">
-    <h2>This month by category</h2>
-    <div class="chartbox"><canvas id="c_cat"></canvas></div>
-    <ul class="list" id="catList"><li class="skeleton">Loading…</li></ul>
+  <div class="grid">
+    <div class="stat eat"><div class="k"><i style="background:var(--red)"></i>Eating out</div><div class="v" id="eat">—</div><div class="s" id="eatSub">this month</div></div>
+    <div class="stat"><div class="k">Fuel</div><div class="v" id="fuel">—</div><div class="s">this month</div></div>
+    <div class="stat"><div class="k">Cost per km</div><div class="v" id="cpk">—</div><div class="s" id="cpkSub">needs 2 readings</div></div>
+    <div class="stat"><div class="k">All-time spend</div><div class="v" id="total">—</div><div class="s">since tracking began</div></div>
+  </div>
+
+  <section>
+    <h2>Where it went</h2>
+    <div class="sub">Every category with spending this month</div>
+    <div class="panel" id="cats"><div class="row skel">Loading…</div></div>
   </section>
 
-  <section class="card">
-    <h2>Food spending, last 4 weeks</h2>
-    <div class="chartbox tall"><canvas id="c_food"></canvas></div>
-  </section>
-
-  <section class="card">
-    <h2>Car distance</h2>
-    <div class="grid2">
-      <div class="mini"><div class="k">Odometer now</div><div class="v" id="d_odo">—</div></div>
-      <div class="mini"><div class="k">Km driven (logged)</div><div class="v" id="f_km">—</div></div>
-      <div class="mini"><div class="k">Average per day</div><div class="v" id="d_avg">—</div></div>
-      <div class="mini"><div class="k">Last reading</div><div class="v" id="d_last">—</div></div>
+  <section>
+    <h2>Food, week by week</h2>
+    <div class="sub">Groceries, vegetables, milk, meat and eating out</div>
+    <div class="panel">
+      <div class="cols" id="food"></div>
+      <div class="flegend" id="flegend"></div>
     </div>
-    <div class="chartbox" style="margin-top:12px"><canvas id="c_dist"></canvas></div>
-    <div class="muted" id="kmNote"></div>
   </section>
 
-  <section class="card">
-    <h2>Fuel</h2>
-    <div class="grid2">
-      <div class="mini"><div class="k">Fuel this month</div><div class="v" id="f_month">—</div></div>
-      <div class="mini"><div class="k">Cost per km</div><div class="v" id="f_cpk">—</div></div>
+  <section>
+    <h2>Car</h2>
+    <div class="sub">From odometer readings and fuel bills</div>
+    <div class="car">
+      <div><div class="k">Odometer</div><div class="v" id="odo">—</div></div>
+      <div><div class="k">Km logged</div><div class="v" id="km">—</div></div>
+      <div><div class="k">Per day</div><div class="v" id="perday">—</div></div>
+      <div><div class="k">Last reading</div><div class="v" id="last">—</div></div>
     </div>
-    <div class="chartbox" style="margin-top:12px"><canvas id="c_fuel"></canvas></div>
-    <div class="chartbox" style="margin-top:12px"><canvas id="c_km"></canvas></div>
+    <div class="panel">
+      <div class="hbars" id="kmbars"></div>
+    </div>
+    <div class="panel">
+      <div class="hbars" id="fuelbars"></div>
+    </div>
   </section>
 
-  <footer>Read-only view of the Family Expense Tracker sheet. Add entries through Claude.</footer>
-</main>
+  <footer>A read-only view of the Family Expense Tracker sheet.<br>Send new expenses to Claude and they appear here.</footer>
+</div>
 
 <script>
-const GREENS = ["#1B4332","#2D6A4F","#40916C","#52B788","#74C69D","#95D5B2","#B7E4C7","#0B6E4F","#3A5A40","#588157","#A3B18A","#6A994E","#386641","#81B29A","#2A9D8F","#264653","#8AB17D","#4F772D","#90A955","#31572C","#132A13","#ECF39E","#5E8C61","#A7C957"];
-
-
-const state = {};
-const charts = {};
+const API = "https://script.google.com/macros/s/AKfycbx5S_RkPcfPOCxHi3lM3YiKITle-2KUiANRl3W9YpjAwNeV1lRIl48Gn8vnC5dve4tWvg/exec";
+const PAL = ["#d9c3a0","#7cb7ff","#b79cff","#ffb547","#7fe3b8","#f29bc0","#9fd6e8"];
+const RED = "#ff5a5f", OTHERS = "#5a5a5a";
+const FOODC = {"Groceries":"#d9c3a0","Vegetables & fruits":"#7fe3b8","Milk & dairy":"#7cb7ff","Meat & fish":"#b79cff","Eating out":RED};
 
 const $ = id => document.getElementById(id);
-const num = s => { if (s === undefined || s === null || s === "" || s === "-") return 0; const n = parseFloat(String(s).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; };
-const inr = n => { const neg = n < 0; n = Math.round(Math.abs(n)); const s = n.toString(); let out; if (s.length <= 3) out = s; else { const last3 = s.slice(-3); let rest = s.slice(0, -3); rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ","); out = rest + "," + last3; } return (neg ? "-₹" : "₹") + out; };
+const num = s => { const n = parseFloat(String(s ?? "").replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; };
+const inr = n => { const neg = n < 0; n = Math.round(Math.abs(n)); const s = String(n); const out = s.length <= 3 ? s : s.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ",") + "," + s.slice(-3); return (neg ? "−₹" : "₹") + out; };
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-const MON = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-const parseDate = s => { const m = /^(\d{1,2}) (\w{3}) (\d{4})$/.exec(String(s||"").trim()); return m ? new Date(+m[3], MON[m[2]], +m[1]).getTime() : 0; };
+const short = s => String(s || "").replace(/ \d{4}$/, "");
+let showAll = false, last = null;
 
-/* ---------- banner ---------- */
-function banner(html, kind) { $("banner").innerHTML = html ? `<div class="note ${kind||""}">${html}</div>` : ""; }
+function catColors(list) {
+  let i = 0;
+  return list.map(c => c.name === "Eating out" ? RED : PAL[(i++) % PAL.length]);
+}
 
-/* ---------- render ---------- */
-function renderTiles() {
-  const t = state.tiles; if (!t) return;
-  const v = t[1] || [];
-  $("t_total").textContent = v[0] || "—";
-  $("t_fuel").textContent = v[4] || "—";
-  $("t_cpk").textContent = (v[6] && v[6] !== "-") ? v[6] : "—";
-  $("t_cpk_k").textContent = (t[0] && t[0][6]) || "Cost per km";
-  $("t_eat").textContent = v[8] || "—";
-  $("f_month").textContent = v[4] || "—";
-  $("monthLabel").textContent = ((t[0] && t[0][2]) || "Income").replace(/^Income/, "Expense");
-}
-function renderMonth() {
-  const m = state.month; if (!m) return;
-  const r = m[0] || [];
-  $("t_minc").textContent = r[0] || "—";
-  $("t_mexp").textContent = r[2] || "—";
-  const sav = $("t_msav"); sav.textContent = r[4] || "—";
-  sav.classList.toggle("neg", num(r[4]) < 0);
-}
-function renderCat() {
-  const STRONG = ["#1B4332","#1F4E79","#B5651D","#6A1B9A","#00796B","#8D6E00"];
-  const nz = (state.cat || []).filter(r => r[0] && num(r[1]) > 0).map(r => ({name: r[0], v: num(r[1])})).sort((a, b) => b.v - a.v);
-  let ci = 0;
-  const pick = n => n === "Eating out" ? "#C0392B" : STRONG[(ci++) % STRONG.length];
-  const top = nz.slice(0, nz.length > 6 ? 5 : 6).map(x => Object.assign(x, {color: pick(x.name)}));
-  const rest = nz.slice(top.length);
-  const othersColor = "#5F6B66";
-  rest.forEach(x => x.color = othersColor);
-  const slices = rest.length ? top.concat([{name: "Others", v: rest.reduce((a, b) => a + b.v, 0), color: othersColor}]) : top;
-  const ul = $("catList");
-  if (!nz.length) ul.innerHTML = `<li class="muted">No expenses this month yet.</li>`;
-  else {
-    const total = nz.reduce((a, b) => a + b.v, 0);
-    ul.innerHTML = nz.map(x =>
-      `<li><span><span class="dot" style="background:${x.color}"></span>${esc(x.name)}</span><span class="amt">${inr(x.v)} <span class="muted">${(x.v / total * 100).toFixed(1)}%</span></span></li>`).join("");
+function render(d) {
+  last = d;
+  const t = d.tiles || [[], []], tv = t[1] || [], tl = t[0] || [];
+  const m = (d.month || [[]])[0] || [];
+  const inc = num(m[0]), spent = num(m[2]), sav = num(m[4]);
+  const monthName = ((tl[2] || "").match(/\(([^)]+)\)/) || [])[1] || "This month";
+  const MN = {Jan:"January",Feb:"February",Mar:"March",Apr:"April",May:"May",Jun:"June",Jul:"July",Aug:"August",Sep:"September",Oct:"October",Nov:"November",Dec:"December"};
+  $("month").textContent = monthName.replace(/^(\w{3})( \d{4})?$/, (x, a) => MN[a] || a);
+  $("spent").innerHTML = `<span class="rs">₹</span>${inr(spent).replace(/^[−]?₹/, "")}`;
+  $("of").innerHTML = inc ? `of <b>${inr(inc)}</b> income, ${Math.round(spent / inc * 100)}% used` : "No income logged this month yet";
+  $("inc").textContent = inr(inc);
+  $("sav").textContent = inr(sav);
+  $("sav").className = "v " + (sav < 0 ? "red" : "mint");
+
+  // categories
+  const cats = (d.cat || []).filter(r => r[0] && num(r[1]) > 0).map(r => ({name: r[0], v: num(r[1])})).sort((a, b) => b.v - a.v);
+  const cols = catColors(cats); cats.forEach((c, i) => c.color = cols[i]);
+  const top = cats.slice(0, cats.length > 6 ? 5 : 6), rest = cats.slice(top.length);
+  const segs = top.map(c => ({name: c.name, v: c.v, color: c.color}));
+  if (rest.length) segs.push({name: "Others", v: rest.reduce((a, b) => a + b.v, 0), color: OTHERS});
+  const base = Math.max(inc, spent) || 1;
+  const bar = $("bar");
+  bar.innerHTML = segs.map((s, i) => `<span style="width:${(s.v / base * 100).toFixed(2)}%;background:${s.color};animation-delay:${i * 60}ms" title="${esc(s.name)} ${inr(s.v)}"></span>`).join("") +
+    (sav > 0 && inc ? `<span class="save" style="width:${(sav / base * 100).toFixed(2)}%;animation-delay:${segs.length * 60}ms" title="Saved ${inr(sav)}"></span>` : "");
+  $("legend").innerHTML = segs.map(s => `<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join("") + (sav > 0 ? `<span><i style="background:var(--mint)"></i>Saved</span>` : "");
+  const ins = cats.find(c => c.name === "Insurance & EMI");
+  $("everyday").textContent = ins && spent ? `Everyday spending without insurance & EMI: ${inr(spent - ins.v)}` : "";
+
+  const total = cats.reduce((a, b) => a + b.v, 0) || 1;
+  const shown = showAll ? cats : cats.slice(0, 6);
+  const maxv = cats[0] ? cats[0].v : 1;
+  $("cats").innerHTML = cats.length ? shown.map(c => `
+    <div class="row"><div class="t"><div class="n"><i style="background:${c.color}"></i><span>${esc(c.name)}</span></div>
+    <div class="a">${inr(c.v)}<small>${(c.v / total * 100).toFixed(c.v / total < .01 ? 1 : 0)}%</small></div></div>
+    <div class="track"><b style="width:${Math.max(1.5, c.v / maxv * 100).toFixed(1)}%;background:${c.color}"></b></div></div>`).join("") +
+    (cats.length > 6 ? `<button class="more" id="moreBtn" type="button">${showAll ? "Show top 6" : `Show all ${cats.length}`}</button>` : "")
+    : `<div class="empty">No spending this month yet. Send an expense to Claude, like "milk 60".</div>`;
+  const mb = $("moreBtn"); if (mb) mb.onclick = () => { showAll = !showAll; render(last); };
+
+  // tiles
+  $("eat").textContent = tv[8] ? inr(num(tv[8])) : "—";
+  const eatPct = spent ? num(tv[8]) / spent * 100 : 0;
+  $("eatSub").textContent = spent ? `${eatPct.toFixed(1)}% of this month` : "this month";
+  $("fuel").textContent = tv[4] ? inr(num(tv[4])) : "—";
+  const cpk = num(tv[6]);
+  $("cpk").textContent = cpk ? "₹" + cpk.toFixed(2) : "—";
+  $("cpkSub").textContent = cpk ? (tl[6] || "").replace(/^Cost per km\s*/, "").replace(/[()]/g, "") || "per km" : "fills in after next fuel + reading";
+  $("total").textContent = tv[0] ? inr(num(tv[0])) : "—";
+
+  // food
+  const f = d.food || [];
+  const head = (f[0] || []).slice(1, 6);
+  const weeks = f.slice(1, 5);
+  const wtot = weeks.map(r => head.reduce((a, _, i) => a + num(r[i + 1]), 0));
+  const wmax = Math.max(1, ...wtot);
+  $("food").innerHTML = weeks.map((r, wi) => {
+    const segsF = head.map((h, i) => `<span style="height:${(num(r[i + 1]) / wmax * 140).toFixed(1)}px;background:${FOODC[h] || OTHERS}" title="${esc(h)} ${inr(num(r[i + 1]))}"></span>`).join("");
+    const lbl = String(r[0] || "").split(" to ");
+    return `<div class="col"><div class="tot">${wtot[wi] ? inr(wtot[wi]) : "—"}</div><div class="stack">${segsF}</div><div class="wk">${esc(short(lbl[0]))}<br>${esc(short(lbl[1] || ""))}</div></div>`;
+  }).join("");
+  $("flegend").innerHTML = head.map(h => `<span><i style="background:${FOODC[h] || OTHERS}"></i>${esc(h)}</span>`).join("");
+
+  // car
+  const odo = (d.odo || []).filter(r => r[0] && num(r[1]));
+  const MON = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  const pd = s => { const x = /^(\d{1,2}) (\w{3}) (\d{4})$/.exec(String(s).trim()); return x ? new Date(+x[3], MON[x[2]], +x[1]).getTime() : 0; };
+  if (odo.length) {
+    const lr = odo[odo.length - 1], fr = odo[0];
+    $("odo").innerHTML = num(lr[1]).toLocaleString("en-IN") + "<small>km</small>";
+    $("last").textContent = short(lr[0]);
+    const days = (pd(lr[0]) - pd(fr[0])) / 864e5;
+    $("perday").textContent = odo.length > 1 && days > 0 ? Math.round((num(lr[1]) - num(fr[1])) / days) + " km" : "—";
   }
-  const data = {labels: slices.map(x => x.name), datasets: [{data: slices.map(x => x.v), backgroundColor: slices.map(x => x.color), borderWidth: 2, borderColor: "#fff"}]};
-  drawChart("c_cat", {type: "doughnut", data, options: {cutout: "62%", plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => " " + c.label + ": " + inr(c.parsed)}}}}});
-}
-function renderFood() {
-  const f = state.food; if (!f || !f.length) return;
-  const head = f[0] || [];
-  const cats = head.slice(1, 6);
-  const rows = f.slice(1, 5);
-  const labels = rows.map(r => r[0] || "");
-  const cols = ["#1B4332","#2D6A4F","#40916C","#1F4E79","#C0392B"];
-  const datasets = cats.map((c, i) => ({label: c, data: rows.map(r => num(r[i + 1])), backgroundColor: cols[i], borderRadius: 4, stack: "s"}));
-  drawChart("c_food", {type: "bar", data: {labels, datasets}, options: {plugins: {legend: {position: "bottom", labels: {boxWidth: 10, font: {size: 11}}}, tooltip: {callbacks: {label: c => " " + c.dataset.label + ": " + inr(c.parsed.y), footer: items => "Total: " + inr(items.reduce((a, b) => a + b.parsed.y, 0))}}}, scales: {x: {stacked: true, grid: {display: false}, ticks: {font: {size: 11}}}, y: {stacked: true, ticks: {callback: v => inr(v), font: {size: 11}}}}}});
-}
-function renderFuel() {
-  const p = state.fuelP || [];
-  const tot = p[0] || [];
-  $("f_km").textContent = tot[3] || "0 km";
-  $("f_cpk").textContent = tot[5] || "—";
-  const periods = p.slice(1).filter(r => r[0] && r[1]).slice(0, 8).reverse();
-  const short = s => String(s).replace(/ \d{4}$/, "");
-  const labels = periods.map(r => short(r[0]) + " – " + short(r[1]));
-  $("kmNote").textContent = periods.length ? "Each bar is the distance between two odometer readings." : "Send two odometer readings to Claude (for example \"car 45230 km\") to start km tracking.";
-  drawChart("c_dist", {type: "bar", data: {labels, datasets: [{label: "Km driven", data: periods.map(r => num(r[3])), backgroundColor: "#40916C", borderRadius: 4}]}, options: {plugins: {legend: {display: false}, title: {display: true, text: "Km driven per period", color: "#1B4332", font: {weight: 600}}, tooltip: {callbacks: {label: c => " " + c.parsed.y.toLocaleString("en-IN") + " km", afterLabel: c => { const r = periods[c.dataIndex]; return r ? (r[2] + " days · " + r[4]) : ""; }}}}, scales: {x: {grid: {display: false}, ticks: {font: {size: 10}}}, y: {ticks: {callback: v => v.toLocaleString("en-IN") + " km", font: {size: 11}}}}}});
-  drawChart("c_km", {type: "line", data: {labels, datasets: [{label: "Cost per km", data: periods.map(r => num(r[5])), borderColor: "#1B4332", backgroundColor: "#1B4332", tension: .3, pointRadius: 4}]}, options: {plugins: {legend: {display: false}, title: {display: true, text: "Cost per km by period", color: "#1B4332", font: {weight: 600}}, tooltip: {callbacks: {label: c => " ₹" + c.parsed.y.toFixed(2) + " per km"}}}, scales: {x: {grid: {display: false}, ticks: {font: {size: 10}}}, y: {beginAtZero: true, ticks: {callback: v => "₹" + v, font: {size: 11}}}}}});
-  const m = (state.fuelM || []).slice(1).filter(r => r[0]).slice(0, 6).reverse();
-  drawChart("c_fuel", {type: "bar", data: {labels: m.map(r => r[0]), datasets: [{label: "Fuel", data: m.map(r => num(r[1])), backgroundColor: "#2D6A4F", borderRadius: 4}]}, options: {plugins: {legend: {display: false}, title: {display: true, text: "Fuel spend by month", color: "#1B4332", font: {weight: 600}}, tooltip: {callbacks: {label: c => " " + inr(c.parsed.y)}}}, scales: {x: {grid: {display: false}}, y: {ticks: {callback: v => inr(v), font: {size: 11}}}}}});
-}
-function renderOdo() {
-  const rows = (state.odo || []).filter(r => r && r[0] && r[1]).map(r => ({d: parseDate(r[0]), label: r[0], km: num(r[1])})).filter(x => x.d && x.km).sort((a, b) => a.d - b.d);
-  if (!rows.length) { $("d_odo").textContent = "—"; $("d_last").textContent = "—"; $("d_avg").textContent = "—"; }
-  else {
-    const last = rows[rows.length - 1], first = rows[0];
-    $("d_odo").textContent = last.km.toLocaleString("en-IN") + " km";
-    $("d_last").textContent = String(last.label).replace(/ \d{4}$/, "");
-    const days = (last.d - first.d) / 86400000;
-    $("d_avg").textContent = rows.length > 1 && days > 0 ? Math.round((last.km - first.km) / days).toLocaleString("en-IN") + " km" : "—";
-  }
-}
-const RENDER = {tiles: renderTiles, month: renderMonth, cat: renderCat, food: renderFood, fuelP: renderFuel, fuelM: renderFuel, odo: renderOdo};
+  const fp = d.fuelP || [];
+  $("km").textContent = fp[0] && num(fp[0][3]) ? num(fp[0][3]).toLocaleString("en-IN") + " km" : "—";
+  const periods = fp.slice(1).filter(r => r[0] && r[1]).slice(0, 6);
+  const kmax = Math.max(1, ...periods.map(r => num(r[3])));
+  $("kmbars").innerHTML = `<div class="hb" style="padding-top:12px"><span class="l" style="color:var(--ink);font-weight:700">Km per period</span><span></span><span></span></div>` + (periods.length ? periods.map(r =>
+    `<div class="hb"><span class="l">${esc(short(r[0]))}${r[0] !== r[1] ? " – " + esc(short(r[1])) : ""}</span><span class="tr"><b style="width:${(num(r[3]) / kmax * 100).toFixed(1)}%"></b></span><span class="r">${num(r[3]).toLocaleString("en-IN")} km</span></div>`).join("")
+    : `<div class="empty">Send two odometer readings, like "odometer 102500", to see km per period.</div>`);
+  const fm = (d.fuelM || []).slice(1).filter(r => r[0] && num(r[1])).slice(0, 6);
+  const fmax = Math.max(1, ...fm.map(r => num(r[1])));
+  $("fuelbars").innerHTML = `<div class="hb" style="padding-top:12px"><span class="l" style="color:var(--ink);font-weight:700">Fuel by month</span><span></span><span></span></div>` + (fm.length ? fm.map(r =>
+    `<div class="hb"><span class="l">${esc(r[0])}</span><span class="tr"><b style="width:${(num(r[1]) / fmax * 100).toFixed(1)}%"></b></span><span class="r">${inr(num(r[1]))}</span></div>`).join("")
+    : `<div class="empty">No fuel bills yet.</div>`);
 
-function drawChart(id, cfg) {
-  if (!window.Chart) return;
-  cfg.options = Object.assign({responsive: true, maintainAspectRatio: false, animation: {duration: 300}}, cfg.options || {});
-  if (charts[id]) { charts[id].data = cfg.data; charts[id].options = cfg.options; charts[id].update(); }
-  else charts[id] = new Chart($(id), cfg);
-}
-
-const API = "https://script.google.com/macros/s/AKfycbx5S_RkPcfPOCxHi3lM3YiKITle-2KUiANRl3W9YpjAwNeV1lRIl48Gn8vnC5dve4tWvg/exec";
-function getKey() {
-  const fromUrl = new URLSearchParams(location.hash.slice(1)).get("k") || new URLSearchParams(location.search).get("k");
-  try { if (fromUrl) localStorage.setItem("fe_k", fromUrl); return fromUrl || localStorage.getItem("fe_k") || ""; } catch (e) { return fromUrl || ""; }
-}
-const KEYP = getKey();
-function onData(d) {
-  $("refresh").textContent = "Refresh";
-  banner("");
-  for (const k of Object.keys(RENDER)) { state[k] = d[k] || []; }
-  for (const k of ["tiles", "month", "cat", "food", "fuelP", "odo"]) { try { RENDER[k](); } catch (e) { console.log(e); } }
   $("updated").textContent = "Updated " + new Date(d.at).toLocaleString("en-IN", {day: "numeric", month: "short", hour: "numeric", minute: "2-digit"});
 }
-function onFail(msg) {
-  $("refresh").textContent = "Refresh";
-  if (/not valid/i.test(msg)) banner("This link is not valid. Ask Abhijith for the current app link.", "err");
-  else banner("Could not load the sheet just now: " + esc(msg) + ". Tap Refresh to try again.", "err");
+
+function getKey() {
+  const u = new URLSearchParams(location.hash.slice(1)).get("k") || new URLSearchParams(location.search).get("k");
+  try { if (u) localStorage.setItem("fe_k", u); return u || localStorage.getItem("fe_k") || ""; } catch (e) { return u || ""; }
 }
+const KEY = getKey();
+function banner(msg) { $("banner").innerHTML = msg ? `<div class="banner">${msg}</div>` : ""; }
 async function load() {
-  if (!KEYP) { onFail("This link is not valid."); return; }
-  $("refresh").textContent = "…";
+  if (window.__MOCK) { render(window.__MOCK); return; }
+  if (!KEY) { banner("This link is missing its key. Open the full app link Abhijith shared."); $("updated").textContent = ""; return; }
+  $("refresh").classList.add("spin");
   try {
-    const r = await fetch(API + "?fmt=json&k=" + encodeURIComponent(KEYP), {cache: "no-store", credentials: "omit"});
+    const r = await fetch(API + "?fmt=json&k=" + encodeURIComponent(KEY), {cache: "no-store", credentials: "omit"});
     const d = await r.json();
-    if (d.error) onFail(d.error); else onData(d);
-  } catch (e) { onFail(String(e.message || e)); }
+    if (d.error) banner(/not valid/i.test(d.error) ? "This link is no longer valid. Ask Abhijith for the current app link." : "The sheet didn't load: " + esc(d.error) + ". Tap refresh to try again.");
+    else { banner(""); render(d); }
+  } catch (e) { banner("Couldn't reach the sheet. Check your connection and tap refresh."); }
+  $("refresh").classList.remove("spin");
 }
 $("refresh").onclick = load;
 document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
 setInterval(() => { if (!document.hidden) load(); }, 120000);
 load();
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+if ("serviceWorker" in navigator && !window.__MOCK) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
 </body>
 </html>
